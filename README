@@ -1,39 +1,148 @@
-Problem statement:- 
-
-
-"Dear audience,
-I'd like to address a common challenge faced by many of us as we embark on our journeys into adulthood - the need to leave our
-hometowns to pursue educational or career opportunities in new cities.
-Let's begin with Case 1, the scenario of a college student:
-Imagine you're starting college in a new city, most likely a bustling metropolis. Your first challenge is finding suitable
-accommodation, especially if a hostel isn't available. After the arduous task of securing a place to stay, you're confronted with the
-need to acquire essential items for your daily life. These items range from a simple bed to sleep on, to a comprehensive set of
-kitchen utensils, a refrigerator, a table, chairs, a washing machine, and even basic necessities like Wi-Fi, a bucket, a mug, and a
-dustbin etc. This extensive list of essentials can be overwhelming for someone who has just moved far from home, and we'll refer
-to this individual as a 'Junior.'
-The process of procuring these items demands a significant amount of money, effort, and time, adding to the already stressful
-experience of settling into a new city.
-The same challenges apply to Case 2, where individuals relocate for job opportunities. They, too, face the daunting task of finding
-accommodation and obtaining essential resources.
-This is where our platform comes into play, offering a seamless solution to alleviate these challenges and make the transition
-smoother."
-
-
-Proposed solution : 
-
-AnythingNearYou
-Now Here come the Solution which will fulfill the gap for which we need to introduce a new character of our story a Senior
-Senior : A Senior is someone who is playing the same role as you are going to play now either in your office or in your college but
-the import part about the senior is that he no longer require to live in the same city either he completed the college(in case of
-college) or he quitting/switching his current job (case2).
-So now the senior will have the things which a junior needed or he will need it in upcoming future and believe me there are
-enormous number things present for both cases in college or in job.The senior will have the almost everything a junior need or will
-need in the further from career advice to flat he used to live in his college or office days.
-And senior also looking for a junior or anyone who can buy the resource at any reasonable price because it will be very difficult and
-costly for him/her to take all resource with him because some of them are not even useful for him/her anymore and some of
-resources are too heavy or big to take with yourself on a long journey
-Solution: So solution is I am going to create a platform(AnythingNearYou) on which both senior and junior can register
-themselves and a junior can upload the information about the resource he requires and a senior can share the resource which he
-no longer needed.Now on the platform junior can search the resource and senior who have it and he can also directly message to
-the senior for the resource and buy it.
-Tada! Problem Solved.
+anythingnearyou/
+├── backend/
+│   ├── config/                     # Django project settings
+│   │   ├── __init__.py
+│   │   ├── settings/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── development.py
+│   │   │   └── production.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   │
+│   ├── apps/
+│   │   ├── users/                  # User management app
+│   │   │   ├── migrations/
+│   │   │   ├── api/
+│   │   │   │   ├── serializers.py
+│   │   │   │   ├── views.py
+│   │   │   │   └── urls.py
+│   │   │   ├── models.py
+│   │   │   ├── admin.py
+│   │   │   └── tests.py
+│   │   │
+│   │   ├── resources/             # Resource management app
+│   │   │   ├── migrations/
+│   │   │   ├── api/
+│   │   │   │   ├── serializers.py
+│   │   │   │   ├── views.py
+│   │   │   │   └── urls.py
+│   │   │   ├── models.py
+│   │   │   ├── admin.py
+│   │   │   └── tests.py
+│   │   │
+│   │   ├── messages/              # Messaging app
+│   │   │   ├── migrations/
+│   │   │   ├── api/
+│   │   │   │   ├── serializers.py
+│   │   │   │   ├── views.py
+│   │   │   │   └── urls.py
+│   │   │   ├── models.py
+│   │   │   ├── admin.py
+│   │   │   └── tests.py
+│   │   │
+│   │   └── transactions/          # Transactions app -- tetetive
+│   │       ├── migrations/
+│   │       ├── api/
+│   │       │   ├── serializers.py
+│   │       │   ├── views.py
+│   │       │   └── urls.py
+│   │       ├── models.py
+│   │       ├── admin.py
+│   │       └── tests.py
+│   │
+│   ├── core/                      # Core functionality
+│   │   ├── permissions.py
+│   │   ├── pagination.py
+│   │   └── utils.py
+│   │
+│   ├── media/                     # User uploaded files
+│   │   ├── resources/
+│   │   └── profiles/
+│   │
+│   ├── static/                    # Static files
+│   │
+│   ├── templates/                 # Email templates etc.
+│   │
+│   ├── requirements/
+│   │   ├── base.txt
+│   │   ├── development.txt
+│   │   └── production.txt
+│   │
+│   └── manage.py
+│
+├── frontend/
+│   ├── public/
+│   │   ├── index.html
+│   │   ├── favicon.ico
+│   │   └── assets/
+│   │
+│   ├── src/
+│   │   ├── components/            # Reusable components
+│   │   │   ├── common/           # Shared components
+│   │   │   │   ├── Button/
+│   │   │   │   ├── Input/
+│   │   │   │   ├── Modal/
+│   │   │   │   └── Card/
+│   │   │   │
+│   │   │   ├── layout/          # Layout components
+│   │   │   │   ├── Header/
+│   │   │   │   ├── Footer/
+│   │   │   │   └── Sidebar/
+│   │   │   │
+│   │   │   ├── resources/       # Resource related components
+│   │   │   │   ├── ResourceCard/
+│   │   │   │   ├── ResourceList/
+│   │   │   │   └── ResourceDetail/
+│   │   │   │
+│   │   │   └── user/           # User related components
+│   │   │       ├── Profile/
+│   │   │       └── Settings/
+│   │   │
+│   │   ├── pages/              # Page components
+│   │   │   ├── Home/
+│   │   │   ├── Search/
+│   │   │   ├── Profile/
+│   │   │   ├── Messages/
+│   │   │   └── Transactions/
+│   │   │
+│   │   ├── services/           # API services
+│   │   │   ├── api.js
+│   │   │   ├── auth.service.js
+│   │   │   ├── resource.service.js
+│   │   │   └── user.service.js
+│   │   │
+│   │   ├── store/             # Redux store
+│   │   │   ├── actions/
+│   │   │   ├── reducers/
+│   │   │   └── store.js
+│   │   │
+│   │   ├── hooks/            # Custom hooks
+│   │   │   ├── useAuth.js
+│   │   │   └── useResource.js
+│   │   │
+│   │   ├── utils/            # Utility functions
+│   │   │   ├── constants.js
+│   │   │   ├── helpers.js
+│   │   │   └── validation.js
+│   │   │
+│   │   ├── styles/           # Global styles
+│   │   │   ├── global.css
+│   │   │   └── variables.css
+│   │   │
+│   │   ├── App.js
+│   │   ├── index.js
+│   │   └── routes.js
+│   │
+│   ├── package.json
+│   ├── package-lock.json
+│   └── README.md
+│
+├── docker/                   # Docker configuration
+│   ├── backend/
+│   │   └── Dockerfile
+│   └── frontend/
+│       └── Dockerfile
+│
+├── docker-compose.yml
+└── README.md
