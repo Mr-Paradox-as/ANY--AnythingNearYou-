@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -77,29 +75,13 @@ WSGI_APPLICATION = 'anythingnearyou.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'anythingnearyou_db'),
-        'USER': os.environ.get('DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
-        'ATOMIC_REQUESTS': True,  # Wraps each request in a transaction
-        'OPTIONS': {
-            'connect_timeout': 5,
-            'client_encoding': 'UTF8',
-        },
+        'NAME': 'anythingnearyou',
+        'USER': 'postgres',
+        'PASSWORD': 'Abhi563#',
+        'HOST': 'localhost',
     }
 }
 
-# Database connection pooling settings
-CONN_MAX_AGE = 60  # Keep database connections alive for 60 seconds
-
-# Cache configuration using PostgreSQL
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'django_cache',
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
