@@ -1,6 +1,7 @@
 from django.db import models
 from ..user.models import User
 from django.utils import timezone
+import os
 
 # Create your models here.
 class Resource(models.Model):
@@ -20,7 +21,14 @@ class Resource(models.Model):
     is_available = models.BooleanField(default=True)
     posted_date = models.DateTimeField(default=timezone.now)
     location = models.CharField(max_length=100)
-    image_urls = models.TextField(blank=True)  # Store as JSON string for multiple URLs
+    photo = models.ImageField(upload_to='resource_photos/', null=True, blank=True)
 
     def __str__(self):
         return self.title
+
+    def delete(self, *args, **kwargs):
+        # Delete the image file when the model instance is deleted
+        if self.photo:
+            if os.path.isfile(self.photo.path):
+                os.remove(self.photo.path)
+        super().delete(*args, **kwargs)
