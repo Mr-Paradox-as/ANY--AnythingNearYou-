@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.reourcerequest',
     'apps.chat',
     'corsheaders',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
