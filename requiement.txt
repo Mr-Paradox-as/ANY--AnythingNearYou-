@@ -1,0 +1,4 @@
+psycopg2
+pillow
+django
+djangorestframework
