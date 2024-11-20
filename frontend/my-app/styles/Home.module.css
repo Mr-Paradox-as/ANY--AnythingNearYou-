@@ -166,3 +166,14 @@ a.secondary {
     filter: invert();
   }
 }
+
+.resources {
+  display: flex;
+  gap: 20px;
+}
+.resource-card {
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+  max-width: 300px;
+}

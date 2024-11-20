@@ -74,6 +74,7 @@ class ResourceListSerializer(serializers.ModelSerializer):
         fields = [
             'resource_id',
             'title',
+            'description',
             'owner_name',
             'price',
             'category',

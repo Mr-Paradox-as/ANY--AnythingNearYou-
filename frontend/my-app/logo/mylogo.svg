@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <!-- Background Circle -->
+  <circle cx="200" cy="100" r="80" fill="#4A90E2" opacity="0.1"/>
+  
+  <!-- Connected People Silhouettes -->
+  <path d="M160 120 
+           C140 120, 140 80, 160 80
+           C180 80, 180 120, 160 120Z" 
+        fill="#4A90E2"/>
+  <path d="M240 120
+           C220 120, 220 80, 240 80
+           C260 80, 260 120, 240 120Z"
+        fill="#4A90E2"/>
+  
+  <!-- Connection Line -->
+  <path d="M180 100 L220 100" 
+        stroke="#4A90E2" 
+        stroke-width="4"/>
+  
+  <!-- Location Pin -->
+  <path d="M200 60
+           L210 75
+           Q200 90 190 75Z"
+        fill="#FF6B6B"/>
+  
+  <!-- Company Name -->
+  <text x="200" y="150" 
+        font-family="Arial, sans-serif"
+        font-size="24"
+        font-weight="bold"
+        text-anchor="middle"
+        fill="#2C3E50">
+    AnythingNearYou
+  </text>
+  
+  <!-- Tagline -->
+  <text x="200" y="170"
+        font-family="Arial, sans-serif"
+        font-size="12"
+        text-anchor="middle"
+        fill="#666">
+    Connect • Share • Thrive
+  </text>
+</svg>
