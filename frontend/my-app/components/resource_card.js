@@ -6,7 +6,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-export default function MediaCard({ title, description,owner,price,condition }) {
+export default function MediaCard({ title, description }) {
   return (
     <Card
       sx={{
@@ -29,9 +29,6 @@ export default function MediaCard({ title, description,owner,price,condition }) 
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {description || "No description available"}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {price || "No description available"}
         </Typography>
       </CardContent>
       <CardActions sx={{ marginTop: "auto" }}>
