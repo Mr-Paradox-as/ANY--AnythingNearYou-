@@ -44,6 +44,7 @@ export default function Home() {
     };
     fetchData();
   }, []);
+  console.log(resources)
   return (
     <>
     <ResponsiveAppBar/>
@@ -72,9 +73,6 @@ export default function Home() {
                     key={index}
                     title = {resource.title} // Dynamic title from API
                     description = {resource.description} // Dynamic description from API
-                    owner = {resource.owner} // Dynamic link from API
-                    price = {resource.price}
-                    condition = {resource.condition}
                   />
                 ))
               ) : (
