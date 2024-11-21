@@ -1,40 +1,58 @@
-import * as React from "react";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import * as React from 'react';
+import AspectRatio from '@mui/joy/AspectRatio';
+import Button from '@mui/joy/Button';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import CardOverflow from '@mui/joy/CardOverflow';
+import Chip from '@mui/joy/Chip';
+import Link from '@mui/joy/Link';
+import Typography from '@mui/joy/Typography';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
-export default function MediaCard({ title, description }) {
+export default function ProductCard({ image, title, description, price, stock }) {
   return (
-    <Card
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        height: 300, // Set a fixed height for the card
-        width: 300, // Optional: set a width
-      }}
-    >
-      <CardMedia
-        sx={{ height: 140,
-          width: 300,
-          }}
-        image="https://images.unsplash.com/photo-1709884732297-4b3c1a3f725b?q=80&w=2128&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      />
+    <Card sx={{ width: 320, maxWidth: '100%', boxShadow: 'lg' }}>
+      <CardOverflow>
+        <AspectRatio sx={{ minWidth: 200 }}>
+          <img
+            src={image || "https://via.placeholder.com/300"}
+            loading="lazy"
+            alt={title || "Product image"}
+          />
+        </AspectRatio>
+      </CardOverflow>
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {title || "No title available"}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography level="body-xs">{title || "Default Product"}</Typography>
+        <Link
+          href="#product-card"
+          color="neutral"
+          textColor="text.primary"
+          overlay
+          endDecorator={<ArrowOutwardIcon />}
+          sx={{ fontWeight: 'md' }}
+        >
           {description || "No description available"}
+        </Link>
+        <Typography
+          level="title-lg"
+          sx={{ mt: 1, fontWeight: 'xl' }}
+          endDecorator={
+            <Chip component="span" size="sm" variant="soft" color="success">
+              Lowest price
+            </Chip>
+          }
+        >
+          {price || "Price not available"}
+        </Typography>
+        <Typography level="body-sm">
+          (Only <b>{stock || 0}</b> left in stock!)
         </Typography>
       </CardContent>
-      <CardActions sx={{ marginTop: "auto" }}>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
-      </CardActions>
+      <CardOverflow>
+        <Button variant="solid" color="danger" size="lg">
+          Request resource
+        </Button>
+      </CardOverflow>
     </Card>
   );
 }
