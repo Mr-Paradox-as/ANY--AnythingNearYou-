@@ -161,16 +161,20 @@ a.secondary {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
+@media (max-width: 768px) {
+  .resources {
+    flex-direction: column; /* Switch to vertical layout on smaller screens */
+    align-items: center; /* Center cards in vertical layout */
   }
 }
 
 .resources {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap; /* Allows wrapping to the next row for responsiveness */
+  gap: 50px; /* Space between cards */
+  justify-content: center; /* Center cards horizontally */
 }
+
 .resource-card {
   border: 1px solid #ccc;
   padding: 16px;

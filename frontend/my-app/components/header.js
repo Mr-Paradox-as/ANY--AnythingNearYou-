@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = ['Users', 'Feeds', 'Message'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -51,7 +51,16 @@ function ResponsiveAppBar() {
   );
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#808080' }}>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: '#808080',
+        transition: 'background-color 0.3s ease',
+        '&:hover': {
+          backgroundColor: '#333', // Darken on hover
+        },
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <CustomLogo />
@@ -63,6 +72,11 @@ function ResponsiveAppBar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{
+                '&:hover': {
+                  transform: 'scale(1.5)', // Scale on hover
+                },
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -89,29 +103,21 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-          </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{
+                  my: 2,
+                  color: 'white',
+                  display: 'block',
+                  transition: 'color 0.3s ease, transform 0.3s ease',
+                  '&:hover': {
+                    color: '#00BFFF', // Change color on hover
+                    transform: 'scale(1.1)', // Scale button on hover
+                  },
+                }}
               >
                 {page}
               </Button>
@@ -119,7 +125,15 @@ function ResponsiveAppBar() {
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton
+                onClick={handleOpenUserMenu}
+                sx={{
+                  p: 0,
+                  '&:hover': {
+                    transform: 'scale(1.1)', // Scale avatar on hover
+                  },
+                }}
+              >
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
