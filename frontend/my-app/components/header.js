@@ -35,7 +35,7 @@ const CustomLogo = () => (
   </svg>
 );
 
-export default function ResponsiveAppBar({ pages = ['Users', 'Inbox', 'Profile', 'Resource',''], settings = ['Profile', 'Account', 'Logout'] }) {
+export default function ResponsiveAppBar({ pages = ['Users','Resource', 'Inbox', 'Account',''], settings = ['Profile', 'Account', 'Logout'] }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
