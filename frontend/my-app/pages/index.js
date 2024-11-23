@@ -71,7 +71,7 @@ export default function Home() {
                 marginBottom: "15px"  // Reduced margin-bottom
               }}
             >
-              Find, Share & Thrive: A Marketplace for Essential Resources!
+            Making Transitions Easy - Connect, Share, and Settle In Effortlessly.
             </Typography>
             <Typography 
               align="center" 
@@ -82,7 +82,7 @@ export default function Home() {
                 fontStyle: "italic"
               }}
             >
-              From One City to Another – Grab What You Need, Give What You Don't!
+              Moving One City to Another – Grab What You Need, Give What You Don't!
             </Typography>
             <div className={styles.resources}>
               {resources.length > 0 ? (

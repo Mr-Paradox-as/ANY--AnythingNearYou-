@@ -1,168 +1,163 @@
-import * as React from 'react';
+import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
+import SearchIcon from '@mui/icons-material/Search';
 
-const pages = ['Users', 'Feeds', 'Message'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const CustomLogo = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="150" height="50">
+    <circle cx="200" cy="100" r="80" fill="#b3ffff" opacity="0.1" />
+    <path d="M160 120 C140 120, 140 80, 160 80 C180 80, 180 120, 160 120Z" fill="#4A90E2" />
+    <path d="M240 120 C220 120, 220 80, 240 80 C260 80, 260 120, 240 120Z" fill="#4A90E2" />
+    <path d="M180 100 L220 100" stroke="#4A90E2" strokeWidth="4" />
+    <path d="M200 60 L210 75 Q200 90 190 75Z" fill="#FF6B6B" />
+    <text
+      x="200"
+      y="150"
+      fontFamily="Arial, sans-serif"
+      fontSize="24"
+      fontWeight="bold"
+      textAnchor="middle"
+      fill="#2C3E50"
+    >
+      AnythingNearYou
+    </text>
+    <text x="200" y="170" fontFamily="Arial, sans-serif" fontSize="12" textAnchor="middle" fill="#666">
+      Connect • Share • Thrive
+    </text>
+  </svg>
+);
 
-function ResponsiveAppBar() {
+export default function ResponsiveAppBar({ pages = ['Users','Resource', 'Inbox', 'Account',''], settings = ['Profile', 'Account', 'Logout'] }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const CustomLogo = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="150" height="50">
-      <circle cx="200" cy="100" r="80" fill="#b3ffff" opacity="0.1"/>
-      <path d="M160 120 C140 120, 140 80, 160 80 C180 80, 180 120, 160 120Z" fill="#4A90E2"/>
-      <path d="M240 120 C220 120, 220 80, 240 80 C260 80, 260 120, 240 120Z" fill="#4A90E2"/>
-      <path d="M180 100 L220 100" stroke="#4A90E2" stroke-width="4"/>
-      <path d="M200 60 L210 75 Q200 90 190 75Z" fill="#FF6B6B"/>
-      <text x="200" y="150" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" textAnchor="middle" fill="#2C3E50">
-        AnythingNearYou
-      </text>
-      <text x="200" y="170" fontFamily="Arial, sans-serif" fontSize="12" textAnchor="middle" fill="#666">
-        Connect • Share • Thrive
-      </text>
-    </svg>
-  );
+  const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
+  const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
+  const handleCloseNavMenu = () => setAnchorElNav(null);
+  const handleCloseUserMenu = () => setAnchorElUser(null);
 
   return (
-    <AppBar
-      position="static"
-      sx={{
-        backgroundColor: '#808080',
-        transition: 'background-color 0.3s ease',
-        '&:hover': {
-          backgroundColor: '#333', // Darken on hover
-        },
-      }}
-    >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+    <AppBar position="sticky" sx={{ backgroundColor: '#2C3E50', borderRadius: '0 0 16px 16px' }}>
+      <Toolbar
+        disableGutters
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '8px 24px',
+        }}
+      >
+        {/* Custom Logo */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            textAlign: 'center',
+            transition: 'transform 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-5px)', // Floating effect
+            },
+          }}
+        >
           <CustomLogo />
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
+        </Box>
+
+        {/* Search Bar */}
+        <Box sx={{ flexGrow: 1, mx: 2, display: 'flex', justifyContent: 'center' }}>
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Search..."
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: '#4A90E2' }} />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              width: '60%',
+              borderRadius: '8px',
+              backgroundColor: '#ECF0F1',
+              '& .MuiOutlinedInput-root': {
+                '&:hover fieldset': {
+                  borderColor: '#1ABC9C',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#4A90E2',
+                },
+              },
+            }}
+          />
+        </Box>
+
+        {/* Navigation Menu */}
+        <Box
+          sx={{
+            flexGrow: 0,
+            display: 'flex',
+            justifyContent: 'flex-end', // Align items to the right
+            gap: 2,
+          }}
+        >
+          {pages.map((page) => (
+            <Button
+              key={page}
+              onClick={handleCloseNavMenu}
               sx={{
+                my: 2,
+                color: '#ECF0F1',
+                display: 'block',
+                fontSize: '1rem',
+                fontWeight: 'bold',
                 '&:hover': {
-                  transform: 'scale(1.5)', // Scale on hover
+                  color: '#1ABC9C',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 },
               }}
             >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  color: 'white',
-                  display: 'block',
-                  transition: 'color 0.3s ease, transform 0.3s ease',
-                  '&:hover': {
-                    color: '#00BFFF', // Change color on hover
-                    transform: 'scale(1.1)', // Scale button on hover
-                  },
-                }}
-              >
-                {page}
-              </Button>
+              {page}
+            </Button>
+          ))}
+        </Box>
+
+        {/* User Menu */}
+        <Box sx={{ flexGrow: 0 }}>
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" />
+          </IconButton>
+          <Menu
+            sx={{ mt: '45px' }}
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                {setting}
+              </MenuItem>
             ))}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{
-                  p: 0,
-                  '&:hover': {
-                    transform: 'scale(1.1)', // Scale avatar on hover
-                  },
-                }}
-              >
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
+          </Menu>
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
