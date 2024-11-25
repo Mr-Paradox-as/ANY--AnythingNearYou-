@@ -8,8 +8,9 @@ import Chip from '@mui/joy/Chip';
 import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { getServerSideProps } from '@/pages/resources';
 
-export default function ProductCard({ image, title, description, price, owner, location }) {
+export default function ProductCard({ image, title, description, price, owner, location,resource_id }) {
   return (
     <Card
       sx={{
@@ -37,16 +38,16 @@ export default function ProductCard({ image, title, description, price, owner, l
       <CardContent>
         <Typography level="body-xs">{description || "Default Product"}</Typography>
         <Link
-          href="#product-card"
+          href={`/resource_details/${resource_id}`} // Link to the resource_details page
           color="neutral"
           textColor="text.primary"
           overlay
           endDecorator={<ArrowOutwardIcon />}
           sx={{
             fontWeight: 'md',
-            transition: 'color 0.3s ease', // Smooth color transition for title
+            transition: 'color 0.3s ease',
             '&:hover': {
-              color: '#00BFFF', // Change title color on hover
+              color: '#00BFFF',
             },
           }}
         >
@@ -68,6 +69,7 @@ export default function ProductCard({ image, title, description, price, owner, l
         </Typography>
       </CardContent>
       <CardOverflow sx={{ borderRadius: '0 0 16px 16px' }}>
+        
         <Button
           variant="solid"
           size="lg"
