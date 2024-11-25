@@ -19,6 +19,7 @@ class Resource(models.Model):
     price = models.FloatField()
     condition = models.CharField(max_length=10, choices=CONDITION_CHOICES)
     is_available = models.BooleanField(default=True)
+    is_negotiable = models.BooleanField(default=True)
     posted_date = models.DateTimeField(default=timezone.now)
     location = models.CharField(max_length=100)
     photo = models.ImageField(upload_to='resource_photos/', null=True, blank=True)
