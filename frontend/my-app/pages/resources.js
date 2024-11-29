@@ -84,6 +84,9 @@ export default function Resources({ resources }) {
                   owner={resource.owner_name}
                   location={resource.location}
                   resource_id={resource.resource_id}
+                  condition = {resource.condition}
+                  negotiable = {resource.is_negotiable}
+                  post_date = {resource.posted_date}
                 />
               ))
             ) : (

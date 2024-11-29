@@ -25,11 +25,11 @@ const CustomLogo = () => (
       fontSize="24"
       fontWeight="bold"
       textAnchor="middle"
-      fill="#2C3E50"
+      fill="#FFFFFF"
     >
       AnythingNearYou
     </text>
-    <text x="200" y="170" fontFamily="Arial, sans-serif" fontSize="12" textAnchor="middle" fill="#666">
+    <text x="200" y="170" fontFamily="Arial, sans-serif" fontSize="12" textAnchor="middle" fill="#FFFFFF">
       Connect • Share • Thrive
     </text>
   </svg>
