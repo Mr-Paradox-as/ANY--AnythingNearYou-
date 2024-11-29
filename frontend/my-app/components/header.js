@@ -10,6 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import SearchIcon from '@mui/icons-material/Search';
+import Link from 'next/link';
+
 
 const CustomLogo = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="150" height="50">
@@ -110,6 +112,12 @@ export default function ResponsiveAppBar({ pages = ['Users','Resource', 'Inbox',
           }}
         >
           {pages.map((page) => (
+            <Link
+              key={page}
+              href={page === 'Resource' ? '/resources' : `/${page.toLowerCase()}`}
+              passHref
+            >
+          
             <Button
               key={page}
               onClick={handleCloseNavMenu}
@@ -127,6 +135,7 @@ export default function ResponsiveAppBar({ pages = ['Users','Resource', 'Inbox',
             >
               {page}
             </Button>
+            </Link>
           ))}
         </Box>
 
