@@ -1,13 +1,12 @@
 import * as React from 'react';
+import { Typography } from '@mui/joy';
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import ResponsiveAppBar from "@/components/header";
 import Card from '@mui/joy/Card';
 import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
-import Typography from '@mui/joy/Typography';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
-import BioCard from '@/components/profile_card';
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
@@ -20,7 +19,7 @@ export async function getServerSideProps(context) {
 
     const data = await res.json();
     return {
-      props: {
+      props: { 
         resource: data,
       },
     };
@@ -59,84 +58,102 @@ export default function ResourceDetails({ resource }) {
       </Head>
       <ResponsiveAppBar />
       <div className={styles.page}>
-        <main 
-          className={styles.main} 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'flex-start', 
-            position: 'relative', // For absolute positioning of the profile card
-          }}
-        >
-          {/* Left Card Section */}
-          <Card
-            sx={{
-              minHeight: '550px',
-              minWidth: '550px',
-              flexShrink: 0,
-              position: 'relative',
-              transform: 'translate(-300px, -70px)', // Adjust position left and up
+        <main className={styles.main}>
+          <div 
+            style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'flex-start',
+              gap: '210px',  // Increased the gap for more separation
+              width: '100%',
+              padding: '20px',
             }}
           >
-            <CardCover>
-              <img
-                src={resource.photo || "/placeholder.png"}
-                alt={resource.title || "Placeholder"}
-                loading="lazy"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            </CardCover>
-            <CardCover
+            {/* Card Section */}
+            <Card
               sx={{
-                background:
-                  'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 300px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 400px)',
+                minHeight: '550px',
+                minWidth: '550px',
+                flexShrink: 0,
+                position: 'relative',
               }}
-            />
-            <CardContent sx={{ justifyContent: 'flex-end' }}>
-              <Typography level="title-lg" textColor="#fff">
-                {resource.title}
-              </Typography>
+            >
+              <CardCover>
+                <img
+                  src={resource.photo || "/placeholder.png"}
+                  alt={resource.title || "Placeholder"}
+                  loading="lazy"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </CardCover>
+              <CardCover
+                sx={{
+                  background:
+                    'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 300px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 400px)',
+                }}
+              />
+              <CardContent sx={{ justifyContent: 'flex-end' }}>
+                <Typography level="title-lg" textColor="#fff">
+                  {resource.title}
+                </Typography>
+                <Typography
+                  startDecorator={<LocationOnRoundedIcon />}
+                  textColor="neutral.300"
+                >
+                  {resource.location || "Location not specified"}
+                </Typography>
+              </CardContent>
+            </Card>
+
+            {/* Details Section */}
+            <div
+              style={{
+                flex: '1',
+                padding: '30px',
+                backgroundColor: '#000',
+                borderRadius: '12px',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+                color: '#fff',
+                fontFamily: '"Poppins", sans-serif', // Modern font
+                textAlign: 'left',
+              }}
+            >
               <Typography
-                startDecorator={<LocationOnRoundedIcon />}
-                textColor="neutral.300"
+                variant="h5"
+                style={{ color: '#fff', fontWeight: 'bold', marginBottom: '16px' }}
               >
-                {resource.location || "Location not specified"}
+                <span style={{ borderBottom: '4px solid #fff', paddingBottom: '8px' }}>
+                  Resource Details
+                </span>
               </Typography>
-            </CardContent>
-          </Card>
-
-          {/* Profile Card Section */}
-          {/* <div
-            style={{
-              position: 'absolute', // Absolute positioning
-              top: -90, // Aligns to the top
-              right: -300, // Aligns to the right
-              margin: '20px', // Adds some spacing
-              zIndex: 1, // Ensures it stays on top
-            }}
-          >
-            <BioCard />
-          </div> */}
-
-          {/* Right Details Section */}
-          <div className={styles.details} style={{ flexGrow: 1, marginLeft: '20px' }}>
-            <p>
-              <strong>Description:</strong> {resource.description}
-            </p>
-            <p>
-              <strong>Category:</strong> {resource.category}
-            </p>
-            <p>
-              <strong>Condition:</strong> {resource.condition}
-            </p>
-            <p>
-              <strong>Price:</strong> ₹{resource.price}
-            </p>
-            <p>
-              <strong>Posted by:</strong> {resource.owner_name}
-            </p>
-            <p>
-              <strong>Available:</strong> {resource.is_available ? "Yes" : "No"}
-            </p>
+              <div style={{ marginBottom: '20px' }}>
+                <Typography variant="body1" style={{ color: '#fff', marginBottom: '8px' }}>
+                  <strong>Description :</strong> {resource.description}
+                </Typography>
+                <Typography variant="body1" style={{ color: '#fff' }}>
+                  <strong>Location :</strong> {resource.location }
+                </Typography>
+                <Typography variant="body1" style={{ color: '#fff', marginBottom: '8px' }}>
+                  <strong>Category :</strong> {resource.category}
+                </Typography>
+                <Typography variant="body1" style={{ color: '#fff', marginBottom: '8px' }}>
+                  <strong>Condition :</strong> {resource.condition}
+                </Typography>
+                <Typography variant="body1" style={{ color: '#fff', marginBottom: '8px' }}>
+                  <strong>Price :</strong> ₹{resource.price}
+                </Typography>
+                <Typography variant="body1" style={{ color: '#fff' }}>
+                  <strong>Available :</strong> {resource.is_available ? "Yes" : "No"}
+                </Typography>
+                <Typography variant="body1" style={{ color: '#fff' }}>
+                  <strong>Negotiable :</strong> {resource.is_negotiable? "Yes" : "No"}
+                </Typography>
+                <Typography variant="body1" style={{ color: '#fff', marginBottom: '8px' }}>
+                  <strong>Posted by :</strong> {resource.owner_name}
+                </Typography>
+              
+              </div>
+            </div>
           </div>
         </main>
       </div>

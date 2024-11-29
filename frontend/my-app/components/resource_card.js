@@ -10,7 +10,7 @@ import Typography from '@mui/joy/Typography';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import { getServerSideProps } from '@/pages/resources';
 
-export default function ProductCard({ image, title, description, price, owner, location,resource_id }) {
+export default function ProductCard({ image, title, description, price, owner, location,resource_id, condition, negotiable, post_date }) {
   return (
     <Card
       sx={{
@@ -36,7 +36,7 @@ export default function ProductCard({ image, title, description, price, owner, l
         </AspectRatio>
       </CardOverflow>
       <CardContent>
-        <Typography level="body-xs">{description || "Default Product"}</Typography>
+        <Typography level="body-xs">{"Location ~ " + location || "Default Product"}</Typography>
         <Link
           href={`/resource_details/${resource_id}`} // Link to the resource_details page
           color="neutral"
@@ -58,7 +58,7 @@ export default function ProductCard({ image, title, description, price, owner, l
           sx={{ mt: 1, fontWeight: 'xl' }}
           endDecorator={
             <Chip component="span" size="sm" variant="soft" color="success">
-              {location}
+                {negotiable ? "Negotiable" : "Not Negotiable"}
             </Chip>
           }
         >
