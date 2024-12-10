@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,7 +11,6 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import SearchIcon from '@mui/icons-material/Search';
 import Link from 'next/link';
-
 
 const CustomLogo = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="150" height="50">
@@ -37,9 +36,10 @@ const CustomLogo = () => (
   </svg>
 );
 
-export default function ResponsiveAppBar({ pages = ['Users','Resource', 'Inbox', 'Account',''], settings = ['Profile', 'Account', 'Logout'] }) {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox', 'Account'], settings = ['Profile', 'Logout'] }) {
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulating login status
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
@@ -47,7 +47,14 @@ export default function ResponsiveAppBar({ pages = ['Users','Resource', 'Inbox',
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: '#2C3E50', borderRadius: '0 0 16px 16px' }}>
+    <AppBar
+      position="sticky"
+      sx={{
+        backgroundColor: '#2C3E50',
+        borderRadius: '0 0 16px 16px',
+        marginBottom: 3, // Added marginBottom here for spacing below the AppBar
+      }}
+    >
       <Toolbar
         disableGutters
         sx={{
@@ -114,58 +121,71 @@ export default function ResponsiveAppBar({ pages = ['Users','Resource', 'Inbox',
           {pages.map((page) => (
             <Link
               key={page}
-              href={page === 'Resource' ? '/resources' : `/${page.toLowerCase()}`}
+              href={
+                page === 'Resource'
+                  ? '/resources'
+                  : page === 'Account' && !isLoggedIn
+                  ? '/login'
+                  : `/${page.toLowerCase()}`
+              }
               passHref
             >
-          
-            <Button
-              key={page}
-              onClick={handleCloseNavMenu}
-              sx={{
-                my: 2,
-                color: '#ECF0F1',
-                display: 'block',
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                '&:hover': {
-                  color: '#1ABC9C',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                },
-              }}
-            >
-              {page}
-            </Button>
+              <Button
+                key={page}
+                onClick={() => {
+                  if (page === 'Account' && !isLoggedIn) {
+                    window.location.href = '/login'; // Redirect if not logged in
+                  } else {
+                    handleCloseNavMenu();
+                  }
+                }}
+                sx={{
+                  my: 2,
+                  color: '#ECF0F1',
+                  display: 'block',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    color: '#1ABC9C',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
+              >
+                {page === 'Account' && !isLoggedIn ? 'Login' : page}
+              </Button>
             </Link>
           ))}
         </Box>
 
         {/* User Menu */}
-        <Box sx={{ flexGrow: 0 }}>
-          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" />
-          </IconButton>
-          <Menu
-            sx={{ mt: '45px' }}
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                {setting}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
+        {isLoggedIn && (
+          <Box sx={{ flexGrow: 0 }}>
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" />
+            </IconButton>
+            <Menu
+              sx={{ mt: '45px' }}
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  {setting}
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );

@@ -42,7 +42,7 @@ export default function Resources({ resources }) {
       <ResponsiveAppBar />
       <div className={`${styles.page} ${geistSans.variable} ${geistMono.variable}`}>
         <main className={styles.main}>
-          <Typography
+        <Typography
             level="h2"
             align="center"
             sx={{
@@ -57,6 +57,20 @@ export default function Resources({ resources }) {
               color: "transparent",
               padding: "10px 0",
               marginBottom: "15px",
+              animation: "bounceIn 2s ease-out forwards",
+              '@keyframes bounceIn': {
+                '0%': {
+                  opacity: 0,
+                  transform: 'scale(0.5) translateY(30px)',
+                },
+                '60%': {
+                  opacity: 1,
+                  transform: 'scale(1.1) translateY(-10px)',
+                },
+                '100%': {
+                  transform: 'scale(1) translateY(0)',
+                },
+              },
             }}
           >
             Making Transitions Easy - Connect, Share, and Settle In Effortlessly.
