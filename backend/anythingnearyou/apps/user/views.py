@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 from .models import User
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from .serializers import UserSerializer
 
 # Registration View
@@ -48,3 +49,8 @@ class LogoutView(APIView):
             return Response({"message": "Logged out successfully!"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+#Get all users 
+class UserViewSet(ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
