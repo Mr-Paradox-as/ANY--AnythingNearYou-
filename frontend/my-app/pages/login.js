@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Paper } from '@mui/material';
 import { useRouter } from 'next/router';
 import { styled } from '@mui/system';
@@ -53,117 +53,180 @@ const AnimatedText = styled(Typography)({
 export default function LoginPage() {
   const router = useRouter();
 
+  // State to hold form data and error
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const [error, setError] = useState('');
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(''); // Clear previous error messages
+
+    try {
+      // Send POST request to login API
+      const response = await fetch('http://127.0.0.1:8000/api/users/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Assuming the API returns a token or user data, you can save it to localStorage or state
+        localStorage.setItem('token', data.token); // Example of saving token
+        router.push('/resources'); // Redirect to resources page
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Login failed. Please try again.');
+      }
+    } catch (err) {
+      console.error('Error during login:', err);
+      setError('An unexpected error occurred. Please try again later.');
+    }
+  };
+
   return (
     <div>
-      {/* Responsive AppBar */}
       <ResponsiveAppBar />
       
-      {/* Animated Title Text */}
       <AnimatedText
-  variant="h4"
-  sx={{
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginBottom: -15, // Reduced gap between tagline and card
-    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
-  }}
->
-  Moving One City to Another <br />
-  <span style={{ color: '#FFD700' }}>Grab What You Need, Give What You Don't!</span>
-</AnimatedText>
-
-<Box
-  sx={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-    marginTop: 1, // Reduced gap between tagline and card
-  }}
->
-  <Paper
-    elevation={12}
-    sx={{
-      width: '100%',
-      maxWidth: 400,
-      padding: 4,
-      borderRadius: '16px',
-      textAlign: 'center',
-      background: 'linear-gradient(135deg, #8585ad, #ffffff)',
-    }}
-  >
-    <AnimatedBox sx={{ marginBottom: 3 }}>
-      <CustomLogo />
-    </AnimatedBox>
-
-    <Typography variant="h5" fontWeight="bold" sx={{ color: '#2C3E50', marginBottom: 2 }}>
-      Welcome Back!
-    </Typography>
-    <Typography variant="body1" sx={{ color: '#7F8C8D', marginBottom: 4 }}>
-      Login to your account to continue.
-    </Typography>
-
-    <TextField fullWidth variant="outlined" size="small" label="Email" sx={{ marginBottom: 2 }} />
-    <TextField
-      fullWidth
-      variant="outlined"
-      size="small"
-      label="Password"
-      type="password"
-      sx={{ marginBottom: 3 }}
-    />
-    <Button
-      variant="contained"
-      fullWidth
-      sx={{
-        backgroundColor: '#4A90E2',
-        color: '#fff',
-        fontWeight: 'bold',
-        padding: '10px 0',
-        borderRadius: '8px',
-        '&:hover': {
-          backgroundColor: '#357ABD',
-        },
-      }}
-    >
-      Login
-    </Button>
-
-    <Typography
-      variant="body2"
-      sx={{
-        color: '#4A90E2',
-        marginTop: 2,
-        cursor: 'pointer',
-        '&:hover': { textDecoration: 'underline' },
-      }}
-    >
-      Forgot your password?
-    </Typography>
-
-    {/* Register Link */}
-    <Typography
-      variant="body2"
-      sx={{
-        marginTop: 3,
-        color: '#2C3E50',
-      }}
-    >
-      Don't have an account?{' '}
-      <span
-        onClick={() => router.push('/register')}
-        style={{
-          color: '#4A90E2',
-          cursor: 'pointer',
+        variant="h4"
+        sx={{
+          color: '#FFFFFF',
+          textAlign: 'center',
           fontWeight: 'bold',
+          marginBottom: -15,
+          textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
         }}
       >
-        Register here
-      </span>
-    </Typography>
-  </Paper>
-</Box>
+        Moving One City to Another <br />
+        <span style={{ color: '#FFD700' }}>Grab What You Need, Give What You Don't!</span>
+      </AnimatedText>
+
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          marginTop: 1,
+        }}
+      >
+        <Paper
+          elevation={12}
+          sx={{
+            width: '100%',
+            maxWidth: 400,
+            padding: 4,
+            borderRadius: '16px',
+            textAlign: 'center',
+            background: 'linear-gradient(135deg, #8585ad, #ffffff)',
+          }}
+        >
+          <AnimatedBox sx={{ marginBottom: 3 }}>
+            <CustomLogo />
+          </AnimatedBox>
+
+          <Typography variant="h5" fontWeight="bold" sx={{ color: '#2C3E50', marginBottom: 2 }}>
+            Welcome Back!
+          </Typography>
+          <Typography variant="body1" sx={{ color: '#7F8C8D', marginBottom: 4 }}>
+            Login to your account to continue.
+          </Typography>
+
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              sx={{ marginBottom: 2 }}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="Password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              sx={{ marginBottom: 3 }}
+            />
+            {error && (
+              <Typography variant="body2" sx={{ color: 'red', marginBottom: 2 }}>
+                {error}
+              </Typography>
+            )}
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{
+                backgroundColor: '#4A90E2',
+                color: '#fff',
+                fontWeight: 'bold',
+                padding: '10px 0',
+                borderRadius: '8px',
+                '&:hover': {
+                  backgroundColor: '#357ABD',
+                },
+              }}
+            >
+              Login
+            </Button>
+          </form>
+
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#4A90E2',
+              marginTop: 2,
+              cursor: 'pointer',
+              '&:hover': { textDecoration: 'underline' },
+            }}
+          >
+            Forgot your password?
+          </Typography>
+
+          <Typography
+            variant="body2"
+            sx={{
+              marginTop: 3,
+              color: '#2C3E50',
+            }}
+          >
+            Don't have an account?{' '}
+            <span
+              onClick={() => router.push('/register')}
+              style={{
+                color: '#4A90E2',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+              }}
+            >
+              Register here
+            </span>
+          </Typography>
+        </Paper>
+      </Box>
     </div>
   );
 }

@@ -7,10 +7,13 @@ from django.contrib.auth.hashers import check_password
 from .models import User
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from .serializers import UserSerializer
+import json
+
 
 # Registration View
 class RegisterView(APIView):
     def post(self, request):
+        print("Request data:", json.loads(request.body))
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
