@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Paper } from '@mui/material';
 import { styled } from '@mui/system';
 import { useRouter } from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ResponsiveAppBar from "@/components/header";
 
+// Custom Logo Component
 const CustomLogo = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="150" height="50">
     <circle cx="200" cy="100" r="80" fill="#b3ffff" opacity="0.1" />
@@ -28,6 +31,7 @@ const CustomLogo = () => (
   </svg>
 );
 
+// Typewriter Effect Component
 const TypewriterText = styled('div')({
   fontSize: '24px',
   fontWeight: 'bold',
@@ -47,13 +51,67 @@ const TypewriterText = styled('div')({
   },
 });
 
-
 export default function RegisterPage() {
   const router = useRouter();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    full_name: '',
+    phone_number: '',
+    user_type: '',
+    institution: '',
+  });
+
+  const [error, setError] = useState('');
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(''); // Clear any previous errors
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/users/register/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast.success('🎉 Registration successful! Redirecting to login...', {
+          position: 'top-right',
+          autoClose: 20000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000); // Redirect after 3 seconds
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Registration failed. Please try again.');
+      }
+    } catch (err) {
+      console.error('Error during registration:', err);
+      setError('An unexpected error occurred. Please try again later.');
+    }
+  };
 
   return (
     <div>
       <ResponsiveAppBar />
+      <ToastContainer />
       <Box
         sx={{
           height: '100vh',
@@ -72,36 +130,98 @@ export default function RegisterPage() {
             borderRadius: '16px',
             textAlign: 'center',
             background: 'linear-gradient(135deg, #8585ad, #ffffff)',
-            color: '#ECF0F1'
+            color: '#ECF0F1',
           }}
         >
           <CustomLogo />
           <Box sx={{ marginBottom: 2, marginTop: 2 }}>
             <TypewriterText>Connect - Share - Thrive</TypewriterText>
           </Box>
-          <TextField fullWidth variant="outlined" size="small" label="Full Name" sx={{ marginBottom: 2 }} />
-          <TextField fullWidth variant="outlined" size="small" label="Email" sx={{ marginBottom: 2 }} />
-          <TextField fullWidth variant="outlined" size="small" label="Password" type="password" sx={{ marginBottom: 2 }} />
-          <TextField fullWidth variant="outlined" size="small" label="Phone Number" sx={{ marginBottom: 2 }} />
-          <TextField fullWidth variant="outlined" size="small" label="User Type" sx={{ marginBottom: 2 }} />
-          <TextField fullWidth variant="outlined" size="small" label="Institution" sx={{ marginBottom: 3 }} />
-          <Button
-            variant="contained"
-            fullWidth
-            sx={{
-            backgroundColor: '#4A90E2', // Base color matching header
-            color: '#ECF0F1', // Text color for good contrast
-            fontWeight: 'bold',
-            padding: '10px 0',
-            borderRadius: '8px',
-              '&:hover': {
-              backgroundColor: '#357ABD', 
-          },
-          }}
-          >
-          Register
-          </Button>
-
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="Full Name"
+              name="full_name"
+              value={formData.full_name}
+              onChange={handleChange}
+              sx={{ marginBottom: 2 }}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              sx={{ marginBottom: 2 }}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="Password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              sx={{ marginBottom: 2 }}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="Phone Number"
+              name="phone_number"
+              value={formData.phone_number}
+              onChange={handleChange}
+              sx={{ marginBottom: 2 }}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="User Type"
+              name="user_type"
+              value={formData.user_type}
+              onChange={handleChange}
+              sx={{ marginBottom: 2 }}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="Institution"
+              name="institution"
+              value={formData.institution}
+              onChange={handleChange}
+              sx={{ marginBottom: 3 }}
+            />
+            {error && (
+              <Typography variant="body2" sx={{ color: 'red', marginBottom: 2 }}>
+                {error}
+              </Typography>
+            )}
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{
+                backgroundColor: '#4A90E2',
+                color: '#ECF0F1',
+                fontWeight: 'bold',
+                padding: '10px 0',
+                borderRadius: '8px',
+                '&:hover': {
+                  backgroundColor: '#357ABD',
+                },
+              }}
+            >
+              Register
+            </Button>
+          </form>
           <Typography
             variant="body2"
             sx={{
