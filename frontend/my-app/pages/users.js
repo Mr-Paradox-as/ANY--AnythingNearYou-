@@ -1,3 +1,8 @@
+import Head from "next/head";
+import localFont from "next/font/local";
+import styles from "@/styles/Home.module.css";
+import { useEffect, useState } from "react";
+import ResponsiveAppBar from "@/components/header";
 import * as React from 'react';
 import Avatar from '@mui/joy/Avatar';
 import Chip from '@mui/joy/Chip';
@@ -8,19 +13,95 @@ import Typography from '@mui/joy/Typography';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import SvgIcon from '@mui/joy/SvgIcon';
-import TextField from '@mui/joy/TextField';
-import Button from '@mui/joy/Button';
+import Biocard from "@/components/profile_card";
 
-export default function Biocard({ users }) {
+const geistSans = localFont({
+  src: "./fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+});
+const geistMono = localFont({
+  src: "./fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+});
+
+export async function getServerSideProps() {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/api/users/allusers/`);
+    const data = await res.json();
+    return {
+      props: {
+        users: data,
+      },
+    };
+  } catch (err) {
+    console.error("Error fetching data:", err);
+    return {
+      props: {
+        users: [],
+      },
+    };
+  }
+}
+
+export default function Users({ users }) {
   return (
-    <div
+    <>
+      <ResponsiveAppBar />
+      <div className={`${styles.page} ${geistSans.variable} ${geistMono.variable}`}>
+        <main className={styles.main}>
+          <Typography
+            level="h2"
+            align="center"
+            sx={{
+              fontSize: "2.2rem",
+              fontWeight: "bold",
+              color: "#2C3E50",
+              textTransform: "uppercase",
+              letterSpacing: "1.5px",
+              lineHeight: "1.6",
+              background: "linear-gradient(to right, #1D976C, #93F9B9)",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
+              padding: "0px 0",
+              marginBottom: "15px",
+              animation: "bounceIn 2s ease-out forwards",
+              '@keyframes bounceIn': {
+                '0%': {
+                  opacity: 0,
+                  transform: 'scale(0.5) translateY(30px)',
+                },
+                '60%': {
+                  opacity: 1,
+                  transform: 'scale(1.1) translateY(-10px)',
+                },
+                '100%': {
+                  transform: 'scale(1) translateY(0)',
+                },
+              },
+            }}
+          >
+            Meet Our Users – Connecting and Sharing Seamlessly!
+          </Typography>
+          <Typography
+            align="center"
+            sx={{
+              fontSize: "1.2rem",
+              color: "#7F8C8D",
+              marginBottom: "20px",
+              fontStyle: "italic",
+            }}
+          >
+            Connecting people for easier transitions – find users, make friends, and exchange resources and skills.
+          </Typography>
+          <div
       style={{
         display: 'flex',
         flexWrap: 'wrap',
         gap: '16px',
         justifyContent: 'center',
         padding: '20px',
-        background: 'linear-gradient(to right, #f5f7fa, #c3cfe2)',
       }}
     >
       {users.length > 0 ? (
@@ -28,17 +109,12 @@ export default function Biocard({ users }) {
           <Card
             key={user.id || index}
             sx={{
-              width: 360,
+              width: 340,
               maxWidth: '100%',
-              boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
-              borderRadius: '20px',
+              boxShadow: 'xl',
+              borderRadius: 'md',
               overflow: 'hidden',
-              bgcolor: '#fff',
-              transition: 'transform 0.3s, box-shadow 0.3s',
-              '&:hover': {
-                transform: 'translateY(-5px)',
-                boxShadow: '0 15px 30px rgba(0,0,0,0.3)',
-              },
+              bgcolor: 'background.level2',
             }}
           >
             <CardContent
@@ -47,55 +123,25 @@ export default function Biocard({ users }) {
                 flexDirection: 'column',
                 alignItems: 'center',
                 textAlign: 'center',
-                py: 4,
-                background: 'linear-gradient(to bottom, #ffffff, #f0f0f0)',
+                py: 3,
               }}
             >
               <Avatar
                 src="/static/images/avatar/1.jpg"
-                sx={{
-                  '--Avatar-size': '6rem',
-                  mb: 2,
-                  border: '4px solid',
-                  borderColor: 'primary.main',
-                  boxShadow: '0 5px 10px rgba(0, 0, 0, 0.15)',
-                }}
+                sx={{ '--Avatar-size': '5rem', mb: 2, border: '2px solid', borderColor: 'primary.main' }}
               />
-              <Typography
-                level="h5"
-                fontWeight="bold"
-                sx={{
-                  mb: 1,
-                  color: '#333',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                }}
-              >
+              <Typography level="h5" fontWeight="bold" sx={{ mb: 0.5 }}>
                 {user.full_name}
               </Typography>
               <Chip
                 size="sm"
                 variant="soft"
                 color="primary"
-                sx={{
-                  mb: 1.5,
-                  px: 3,
-                  fontWeight: 'bold',
-                  fontSize: '0.875rem',
-                  textTransform: 'capitalize',
-                }}
+                sx={{ mb: 1, px: 2, fontWeight: 'bold', fontSize: '0.875rem' }}
               >
                 {user.user_type}
               </Chip>
-              <Typography
-                level="body-sm"
-                sx={{
-                  maxWidth: '28ch',
-                  mb: 2,
-                  color: 'text.secondary',
-                  fontStyle: 'italic',
-                }}
-              >
+              <Typography level="body-sm" sx={{ maxWidth: '28ch', mb: 2, color: 'text.secondary' }}>
                 {user.institution || 'No institution provided'}
               </Typography>
               <Divider sx={{ width: '80%', mx: 'auto', mb: 2 }} />
@@ -103,7 +149,7 @@ export default function Biocard({ users }) {
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
-                  gap: 2,
+                  gap: 1.5,
                 }}
               >
                 <IconButton size="sm" variant="soft" color="primary">
@@ -137,23 +183,6 @@ export default function Biocard({ users }) {
                   </SvgIcon>
                 </IconButton>
               </Box>
-              <TextField
-                placeholder="Message this user"
-                variant="soft"
-                sx={{
-                  width: '80%',
-                  mt: 2,
-                  borderRadius: '10px',
-                  background: '#f9f9f9',
-                }}
-              />
-              <Button
-                variant="solid"
-                color="primary"
-                sx={{ mt: 2, px: 4, borderRadius: '20px', fontWeight: 'bold' }}
-              >
-                Send Message
-              </Button>
             </CardContent>
           </Card>
         ))
@@ -161,5 +190,8 @@ export default function Biocard({ users }) {
         <p>No users available</p>
       )}
     </div>
+        </main>
+      </div>
+    </>
   );
 }
