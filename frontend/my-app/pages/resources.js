@@ -55,7 +55,7 @@ export default function Resources({ resources }) {
               background: "linear-gradient(to right, #1D976C, #93F9B9)",
               WebkitBackgroundClip: "text",
               color: "transparent",
-              padding: "10px 0",
+              padding: "0px 0",
               marginBottom: "15px",
               animation: "bounceIn 2s ease-out forwards",
               '@keyframes bounceIn': {

@@ -122,7 +122,9 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
             <Link
               key={page}
               href={
-                page === 'Resource'
+                page === 'Users'
+                  ? '/users' // Always redirect to /users
+                  : page === 'Resource'
                   ? '/resources'
                   : page === 'Account' && !isLoggedIn
                   ? '/login'
