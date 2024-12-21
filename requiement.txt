@@ -2,3 +2,13 @@ psycopg2
 pillow
 django
 djangorestframework
+djangorestframework-simplejwt
+django-cors
+django-cors-headers
+django-filter
+django-extensions
+django-guardian
+django-summernote
+django-taggit
+django-taggit-templatetags
+django-taggit-admin
