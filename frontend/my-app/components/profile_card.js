@@ -157,7 +157,7 @@ export default function Biocard({ full_name, email, institution, active }) {
             <Typography
               level="body-sm"
               sx={{
-                color: '#00ff00', // Neon green for sent message
+                color: '#00ff00',
                 fontWeight: 'medium',
                 textShadow: '0 0 5px rgba(0,255,0,0.5)',
               }}
