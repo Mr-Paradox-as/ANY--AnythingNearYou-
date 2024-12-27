@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -36,15 +36,26 @@ const CustomLogo = () => (
   </svg>
 );
 
-export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox', 'Account'], settings = ['Profile', 'Logout'] }) {
+export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox', 'Account'] }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulating login status
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token'); // Remove the token
+    setIsLoggedIn(false); // Update state to reflect logged-out status
+    window.location.href = '/login'; // Redirect to login page
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    setIsLoggedIn(!!token); // Set login status based on token presence
+  }, []);
 
   return (
     <AppBar
@@ -52,7 +63,7 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
       sx={{
         backgroundColor: '#2C3E50',
         borderRadius: '0 0 16px 16px',
-        marginBottom: 3, // Added marginBottom here for spacing below the AppBar
+        marginBottom: 3,
       }}
     >
       <Toolbar
@@ -73,7 +84,7 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
             textAlign: 'center',
             transition: 'transform 0.3s ease',
             '&:hover': {
-              transform: 'translateY(-5px)', // Floating effect
+              transform: 'translateY(-5px)',
             },
           }}
         >
@@ -114,33 +125,15 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
           sx={{
             flexGrow: 0,
             display: 'flex',
-            justifyContent: 'flex-end', // Align items to the right
+            justifyContent: 'flex-end',
             gap: 2,
           }}
         >
-          {pages.map((page) => (
-            <Link
-              key={page}
-              href={
-                page === 'Users'
-                  ? '/users' // Always redirect to /users
-                  : page === 'Resource'
-                  ? '/resources'
-                  : page === 'Account' && !isLoggedIn
-                  ? '/login'
-                  : `/${page.toLowerCase()}`
-              }
-              passHref
-            >
+          {pages.map((page) =>
+            page === 'Logout' && isLoggedIn ? (
               <Button
                 key={page}
-                onClick={() => {
-                  if (page === 'Account' && !isLoggedIn) {
-                    window.location.href = '/login'; // Redirect if not logged in
-                  } else {
-                    handleCloseNavMenu();
-                  }
-                }}
+                onClick={handleLogout}
                 sx={{
                   my: 2,
                   color: '#ECF0F1',
@@ -148,15 +141,47 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
                   fontSize: '1rem',
                   fontWeight: 'bold',
                   '&:hover': {
-                    color: '#1ABC9C',
+                    color: '#E74C3C',
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   },
                 }}
               >
-                {page === 'Account' && !isLoggedIn ? 'Login' : page}
+                {page}
               </Button>
-            </Link>
-          ))}
+            ) : (
+              <Link
+                key={page}
+                href={
+                  page === 'Users'
+                    ? '/users'
+                    : page === 'Resource'
+                    ? '/resources'
+                    : page === 'Account' && !isLoggedIn
+                    ? '/login'
+                    : `/${page.toLowerCase()}`
+                }
+                passHref
+              >
+                <Button
+                  key={page}
+                  onClick={() => handleCloseNavMenu()}
+                  sx={{
+                    my: 2,
+                    color: '#ECF0F1',
+                    display: 'block',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    '&:hover': {
+                      color: '#1ABC9C',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    },
+                  }}
+                >
+                  {page === 'Account' && !isLoggedIn ? 'Login' : page}
+                </Button>
+              </Link>
+            )
+          )}
         </Box>
 
         {/* User Menu */}
@@ -180,11 +205,7 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  {setting}
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Box>
         )}

@@ -83,12 +83,17 @@ export default function LoginPage() {
         },
         body: JSON.stringify(formData),
       });
-
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
-        // Assuming the API returns a token or user data, you can save it to localStorage or state
-        localStorage.setItem('token', data.token); // Example of saving token
-        router.push('/resources'); // Redirect to resources page
+        // Save the tokens in localStorage
+        localStorage.setItem('access_token', data.access);
+        localStorage.setItem('refresh_token', data.refresh);
+  
+        console.log('Access token:', data.access); // Check if the access token exists
+        console.log('Refresh token:', data.refresh);
+  
+        // Redirect to resources page
+        router.push('/resources');
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Login failed. Please try again.');

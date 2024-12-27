@@ -19,13 +19,12 @@ class RegisterView(APIView):
             serializer.save()
             return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
-# Login View
 class LoginView(APIView):
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
-
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
@@ -35,7 +34,11 @@ class LoginView(APIView):
             refresh = RefreshToken.for_user(user)
             return Response({
                 "refresh": str(refresh),
-                "access": str(refresh.access_token)
+                "access": str(refresh.access_token),
+                "user": {  # Add user details for the client-side
+                    "id": user.id,
+                    "email": user.email,
+                }
             })
         else:
             return Response({"error": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
