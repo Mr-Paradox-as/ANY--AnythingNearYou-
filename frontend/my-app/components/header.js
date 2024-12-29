@@ -129,8 +129,11 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
             gap: 2,
           }}
         >
-          {pages.map((page) =>
-            page === 'Logout' && isLoggedIn ? (
+          {pages.map((page) => {
+          // Hide "Inbox" if not logged in
+            if (page === 'Inbox' && !isLoggedIn) return null;
+
+            return page === 'Logout' && isLoggedIn ? (
               <Button
                 key={page}
                 onClick={handleLogout}
@@ -180,8 +183,8 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
                   {page === 'Account' && !isLoggedIn ? 'Login' : page}
                 </Button>
               </Link>
-            )
-          )}
+            );
+          })}
         </Box>
 
         {/* User Menu */}
