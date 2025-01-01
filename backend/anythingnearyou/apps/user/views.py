@@ -5,7 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 from .models import User
+from rest_framework.authentication import BaseAuthentication
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework_simplejwt.tokens import AccessToken
 from .serializers import UserSerializer
 import json
 
@@ -60,3 +65,52 @@ class LogoutView(APIView):
 class UserViewSet(ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class UserProfileView(APIView):
+    def get(self, request):
+        # Extract the token from the Authorization header
+        authorization_header = request.headers.get("Authorization")
+        
+        # Check if the token is provided and split 'Bearer' and the token
+        if authorization_header and authorization_header.startswith('Bearer '):
+            access_t = authorization_header.split(' ')[1]
+        else:
+            return Response({"detail": "Authorization token missing"}, status=400)
+
+        try:
+            # Validate the token using AccessToken
+            access = AccessToken(access_t)
+            print("Token Payload:", access.payload)
+        except Exception as e:
+            raise AuthenticationFailed(f"Invalid or expired token: {str(e)}")
+
+        # Debug: Print user info
+        print("User authenticated:", request.user)
+        print("Is user authenticated?", request.user.is_authenticated)
+
+        # Return a simple response for testing purposes
+        return Response({"message": "User profile retrieved successfully"}, status=200)
+    
+
+
+class CustomJWTAuthentication(BaseAuthentication):
+    def authenticate(self, request):
+        authorization_header = request.headers.get("Authorization")
+        
+        if authorization_header and authorization_header.startswith('Bearer '):
+            access_t = authorization_header.split(' ')[1]
+        else:
+            raise AuthenticationFailed("Authorization token missing")
+
+        try:
+            # Validate the token using AccessToken
+            access = AccessToken(access_t)
+            print("Token Payload:", access.payload)
+            # Optionally: Get user from token (e.g., access.payload.get('user_id'))
+            user = User.objects.get(id=access.payload['user_id'])
+        except Exception as e:
+            raise AuthenticationFailed(f"Invalid or expired token: {str(e)}")
+
+        # Return the user and token
+        return (user, access)  # This is expected by DRF
