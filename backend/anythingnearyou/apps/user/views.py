@@ -66,17 +66,15 @@ class UserViewSet(ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-
 class UserProfileView(APIView):
-    def get(self, request):
+
+    def get(self, request, id=None):
         # Extract the token from the Authorization header
         authorization_header = request.headers.get("Authorization")
-        
-        # Check if the token is provided and split 'Bearer' and the token
         if authorization_header and authorization_header.startswith('Bearer '):
             access_t = authorization_header.split(' ')[1]
         else:
-            return Response({"detail": "Authorization token missing"}, status=400)
+            return Response({"detail": "Authorization token missing"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             # Validate the token using AccessToken
@@ -85,13 +83,27 @@ class UserProfileView(APIView):
         except Exception as e:
             raise AuthenticationFailed(f"Invalid or expired token: {str(e)}")
 
-        # Debug: Print user info
-        print("User authenticated:", request.user)
-        print("Is user authenticated?", request.user.is_authenticated)
+        # Fetch and serialize user details
+        if id is not None:
+            try:
+                user = User.objects.get(id=id)
+                print("Requested User:", user)
+            except User.DoesNotExist:
+                return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Return a simple response for testing purposes
-        return Response({"message": "User profile retrieved successfully"}, status=200)
-    
+            # Serialize and return the user details
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        # Fetch details of the currently authenticated user
+        try:
+            user = User.objects.get(id=access.payload['user_id'])
+            print("Authenticated User:", user)
+        except User.DoesNotExist:
+            return Response({"error": "Authenticated user not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CustomJWTAuthentication(BaseAuthentication):
