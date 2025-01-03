@@ -130,28 +130,37 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
           }}
         >
           {pages.map((page) => {
-          // Hide "Inbox" if not logged in
+            // Hide "Inbox" if not logged in
             if (page === 'Inbox' && !isLoggedIn) return null;
 
-            return page === 'Logout' && isLoggedIn ? (
-              <Button
-                key={page}
-                onClick={handleLogout}
-                sx={{
-                  my: 2,
-                  color: '#ECF0F1',
-                  display: 'block',
-                  fontSize: '1rem',
-                  fontWeight: 'bold',
-                  '&:hover': {
-                    color: '#E74C3C',
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  },
-                }}
-              >
-                {page}
-              </Button>
-            ) : (
+            // Render "Account" dynamically based on login status
+            if (page === 'Account') {
+              return (
+                <Link
+                  key={page}
+                  href={isLoggedIn ? '/myprofile' : '/login'}
+                  passHref
+                >
+                  <Button
+                    sx={{
+                      my: 2,
+                      color: '#ECF0F1',
+                      display: 'block',
+                      fontSize: '1rem',
+                      fontWeight: 'bold',
+                      '&:hover': {
+                        color: isLoggedIn ? '#1ABC9C' : '#E74C3C',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      },
+                    }}
+                  >
+                    {isLoggedIn ? 'My Profile' : 'Login'}
+                  </Button>
+                </Link>
+              );
+            }
+
+            return (
               <Link
                 key={page}
                 href={
@@ -159,15 +168,11 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
                     ? '/users'
                     : page === 'Resource'
                     ? '/resources'
-                    : page === 'Account' && !isLoggedIn
-                    ? '/login'
                     : `/${page.toLowerCase()}`
                 }
                 passHref
               >
                 <Button
-                  key={page}
-                  onClick={() => handleCloseNavMenu()}
                   sx={{
                     my: 2,
                     color: '#ECF0F1',
@@ -180,7 +185,7 @@ export default function ResponsiveAppBar({ pages = ['Users', 'Resource', 'Inbox'
                     },
                   }}
                 >
-                  {page === 'Account' && !isLoggedIn ? 'Login' : page}
+                  {page}
                 </Button>
               </Link>
             );
