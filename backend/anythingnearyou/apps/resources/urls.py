@@ -1,12 +1,9 @@
 from rest_framework.routers import DefaultRouter
-from .views import ResourceViewSet
-from django.urls import path, include
+from .views import ResourceReadOnlyViewSet
 
 router = DefaultRouter()
-router.register(r'resources', ResourceViewSet, basename='resource')
-
-urlpatterns = router.urls
+router.register(r'resources', ResourceReadOnlyViewSet, basename='resources')
 
 urlpatterns = [
-    path('', include(router.urls)),  # Include the router's URLs
-]
+    # Other routes
+] + router.urls

@@ -1,225 +1,237 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, CircularProgress, Paper, Avatar, Divider, Grid, Button, List, ListItem, ListItemText } from '@mui/material';
-import { useRouter } from 'next/router';
-import ResponsiveAppBar from '@/components/header';
+import React, { useEffect, useState } from "react";
+import ResponsiveAppBar from "@/components/header";
 
-export default function MyProfile() {
+const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [resources, setResources] = useState([]);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const router = useRouter();
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const token = localStorage.getItem('access_token'); // Fetch token from localStorage
+      const token = localStorage.getItem("access_token"); // Fetch token from localStorage
 
       if (!token) {
-        setError('Unauthorized. Please log in.');
+        setError("Unauthorized. Please log in.");
         setLoading(false);
-        router.push('/login'); // Redirect to login page if token is missing
         return;
       }
 
       try {
-        const profileResponse = await fetch('http://127.0.0.1:8000/api/users/profile/', {
-          method: 'GET',
+        // Fetch profile data
+        const profileResponse = await fetch("http://127.0.0.1:8000/api/users/profile/", {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const resourceResponse = await fetch('http://127.0.0.1:8000/api/resources/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!profileResponse.ok || !resourceResponse.ok) {
-          throw new Error('Failed to fetch data');
+        if (!profileResponse.ok) {
+          throw new Error("Failed to fetch profile data.");
         }
 
         const profileData = await profileResponse.json();
-        const resourceData = await resourceResponse.json();
-
         setProfile(profileData);
+
+        // Fetch resources tied to the profile ID
+        const resourceResponse = await fetch(
+          `http://localhost:8000/api/resources/owner/${profileData.id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(resourceResponse)
+
+        if (!resourceResponse.ok) {
+          throw new Error("Failed to fetch resources.");
+        }
+
+        const resourceData = await resourceResponse.json();
         setResources(resourceData);
       } catch (err) {
-        setError(err.message || 'An error occurred while fetching data.');
+        setError(err.message || "An error occurred while fetching data.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfileData();
-  }, [router]);
+  }, []);
 
   if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#121212' }}>
-        <CircularProgress color="secondary" />
-      </Box>
-    );
+    return <p>Loading...</p>;
   }
 
   if (error) {
-    return (
-      <Box sx={{ textAlign: 'center', marginTop: '20px', backgroundColor: '#121212', color: '#fff' }}>
-        <Typography variant="h6" color="error">
-          {error}
-        </Typography>
-      </Box>
-    );
+    return <p>Error: {error}</p>;
   }
 
   return (
-    <div>
-      <ResponsiveAppBar />
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-          padding: 4,
-          backgroundColor: '#121212',
-          color: '#fff',
-        }}
-      >
-        <Paper
-          elevation={10}
-          sx={{
-            padding: 4,
-            borderRadius: 4,
-            width: '100%',
-            maxWidth: '600px',
-            backgroundColor: '#1E1E1E',
-            color: '#fff',
-          }}
-        >
-          <Box sx={{ textAlign: 'center', marginBottom: 3 }}>
-            <Avatar
-              alt={profile.full_name}
-              src="/static/images/avatar/1.jpg"
-              sx={{ width: 100, height: 100, margin: '0 auto', marginBottom: 2 }}
+    <div style={pageStyle}>
+      <ResponsiveAppBar/>
+
+      {/* Main Content */}
+      <div style={containerStyle}>
+        {/* Left Column */}
+        <div style={leftColumnStyle}>
+          <div>
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Profile"
+              style={avatarStyle}
             />
-            <Typography variant="h5" fontWeight="bold">
-              {profile.full_name}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              {profile.email}
-            </Typography>
-          </Box>
-          <Divider sx={{ marginBottom: 3, backgroundColor: '#424242' }} />
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Typography variant="body1">
-                <strong>ID:</strong>
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2" color="textSecondary">
-                {profile.id}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body1">
-                <strong>Phone Number:</strong>
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2" color="textSecondary">
-                {profile.phone_number}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body1">
-                <strong>User Type:</strong>
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2" color="textSecondary">
-                {profile.user_type}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body1">
-                <strong>Institution:</strong>
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2" color="textSecondary">
-                {profile.institution}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body1">
-                <strong>Created At:</strong>
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2" color="textSecondary">
-                {new Date(profile.created_at).toLocaleString()}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body1">
-                <strong>Active:</strong>
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2" color={profile.is_active ? 'green' : 'red'}>
-                {profile.is_active ? 'Yes' : 'No'}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Divider sx={{ marginY: 3, backgroundColor: '#424242' }} />
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            Resources You Are Sharing
-          </Typography>
-          {resources.length > 0 ? (
-            <List>
-              {resources.map((resource) => (
-                <ListItem key={resource.id} sx={{ backgroundColor: '#2E2E2E', borderRadius: 2, marginBottom: 1 }}>
-                  <ListItemText
-                    primary={resource.name}
-                    secondary={`Category: ${resource.category} | Status: ${resource.status}`}
-                    sx={{ color: '#fff' }}
+          </div>
+          <h2>{profile?.full_name || "Name not available"}</h2>
+          <p>
+    {"Contact No: "} 
+    {profile?.phone_number || "Contact information not provided."}
+  </p>          <button style={editButtonStyle}>Edit</button>
+        </div>
+
+        {/* Right Column */}
+        <div style={rightColumnStyle}>
+          <section style={sectionStyle}>
+            <h3>About Me</h3>
+            {"Institution Name :  "}
+            {profile?.institution || "No description provided."}
+            <p>{profile?.user_type || "nope"}</p>
+          </section>
+
+          <section style={sectionStyle}>
+            <h3>Resources I Have</h3>
+            {resources.length > 0 ? (
+              resources.map((resource) => (
+                <div style={resourceCardStyle} key={resource.id}>
+                  <img
+                    src={resource.photo}
+                    alt={resource.name}
+                    style={resourceImageStyle}
                   />
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography variant="body2" color="textSecondary">
-              You are not sharing any resources.
-            </Typography>
-          )}
-          <Divider sx={{ marginY: 3, backgroundColor: '#424242' }} />
-          <Box sx={{ textAlign: 'center' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ marginRight: 2 }}
-              onClick={() => router.push('/edit-profile')}
-            >
-              Edit Profile
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => {
-                localStorage.removeItem('access_token');
-                router.push('/login');
-              }}
-            >
-              Logout
-            </Button>
-          </Box>
-        </Paper>
-      </Box>
+                  <div>
+                    <h4>{resource.name}</h4>
+                    <p>{resource.description}</p>
+                  </div>
+                  <div style={resourceButtonsStyle}>
+                    <button style={editButtonStyle}>Edit</button>
+                    <button style={deleteButtonStyle}>Delete</button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No resources found.</p>
+            )}            <button style={addButtonStyle}>+ Add Resource</button>
+
+          </section>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+// Existing styles
+const pageStyle = {
+  backgroundColor: "#121212",
+  color: "#e0e0e0",
+  fontFamily: "Arial, sans-serif",
+  minHeight: "100vh",
+  padding: "0",
+  margin: "0",
+};
+
+const headerStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  backgroundColor: "#1f1f1f",
+  padding: "10px 20px",
+  borderBottom: "1px solid #333",
+};
+
+const navButtonStyle = {
+  backgroundColor: "#333",
+  color: "#fff",
+  border: "none",
+  padding: "10px 15px",
+  margin: "0 5px",
+  borderRadius: "5px",
+  cursor: "pointer",
+};
+
+const containerStyle = {
+  display: "flex",
+  padding: "20px",
+};
+
+const leftColumnStyle = {
+  flex: "1",
+  textAlign: "center",
+  padding: "20px",
+  borderRight: "1px solid #333",
+};
+
+const avatarStyle = {
+  borderRadius: "50%",
+  width: "150px",
+  height: "150px",
+  marginBottom: "15px",
+};
+
+const editButtonStyle = {
+  padding: "10px 20px",
+  backgroundColor: "#007bff",
+  color: "#fff",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+  margin: "10px 0",
+};
+
+const rightColumnStyle = {
+  flex: "2",
+  padding: "20px",
+};
+
+const sectionStyle = {
+  marginBottom: "20px",
+};
+
+const addButtonStyle = {
+  padding: "10px 20px",
+  backgroundColor: "#28a745",
+  color: "#fff",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+};
+
+const resourceCardStyle = {
+  display: "flex",
+  alignItems: "center",
+  padding: "10px",
+  backgroundColor: "#1c1c1c",
+  borderRadius: "8px",
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+  marginBottom: "10px",
+};
+
+const resourceImageStyle = {
+  width: "100px",
+  height: "100px",
+  borderRadius: "8px",
+  marginRight: "20px",
+};
+
+const resourceButtonsStyle = {
+  marginLeft: "auto",
+};
+
+const deleteButtonStyle = {
+  ...editButtonStyle,
+  backgroundColor: "#dc3545",
+};
+
+export default ProfilePage;
