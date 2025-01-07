@@ -146,3 +146,6 @@ anythingnearyou/
 │
 ├── docker-compose.yml
 └── README.md
+
+
+http://127.0.0.1:8001/api/owner/4/resource/2/
