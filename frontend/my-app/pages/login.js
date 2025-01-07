@@ -95,7 +95,7 @@ export default function LoginPage() {
         // Redirect to resources page
         router.push('/resources');
       } else {
-        const errorData = await response.json();
+        const errorData = await response;
         setError(errorData.message || 'Login failed. Please try again.');
       }
     } catch (err) {

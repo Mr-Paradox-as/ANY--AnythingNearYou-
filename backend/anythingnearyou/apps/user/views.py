@@ -33,7 +33,7 @@ class LoginView(APIView):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return Response({"error": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
         if check_password(password, user.password_hash):
             refresh = RefreshToken.for_user(user)
